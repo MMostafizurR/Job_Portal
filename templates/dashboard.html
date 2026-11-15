@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Welcome, {{ profile.display_name }}! <span class="badge bg-secondary fs-6">{{ profile.user_type|title }}</span></h2>
+    </div>
+
+    {% if profile.user_type == 'recruiter' %}
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4>Your Job Openings</h4>
+                <a href="{% url 'post_job' %}" class="btn btn-primary">Post New Job</a>
+            </div>
+            <div class="list-group">
+                {% for job in jobs %}
+                    <div class="list-group-item mb-3 shadow-sm">
+                        <h5>{{ job.title }} <span class="badge bg-success float-end">Openings: {{ job.number_of_openings }}</span></h5>
+                        <p class="mb-1 text-muted">Category: {{ job.category }} | Required Skills: {{ job.skills_set }}</p>
+                        <p>{{ job.job_description }}</p>
+                        <div class="mt-2">
+                            <a href="{% url 'job_applicants' job.id %}" class="btn btn-sm btn-outline-info">View Applicants</a>
+                            <a href="{% url 'edit_job' job.id %}" class="btn btn-sm btn-outline-secondary">Edit Job</a>
+                            <a href="{% url 'delete_job' job.id %}" class="btn btn-sm btn-outline-danger">Delete Job</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-muted">You haven't posted any jobs yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+...
+    {% else %}
+        <div class="col-md-12 mb-4">
+            <form method="GET" class="input-group">
+                <input type="text" name="q" class="form-control" placeholder="Search jobs by title or skills..." value="{{ query }}">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="col-md-12">
+            <h4>Available Job Openings</h4>
+            <div class="list-group">
+                {% for job in jobs %}
+                    <div class="list-group-item mb-3 shadow-sm">
+                        <h5>{{ job.title }}</h5>
+                        <p class="text-muted mb-1">Category: {{ job.category }} | Required Skills: {{ job.skills_set }}</p>
+                        <p>{{ job.job_description }}</p>
+                        {% if job.id in applied_jobs %}
+                            <span class="badge bg-success">Applied</span>
+                        {% else %}
+                            <a href="{% url 'apply_job' job.id %}" class="btn btn-sm btn-outline-success">Apply Now</a>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <p class="text-muted">No jobs available right now.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

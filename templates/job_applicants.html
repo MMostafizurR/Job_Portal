@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Applicants for: {{ job.title }}</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-sm btn-secondary mb-3">&larr; Back to Dashboard</a>
+    </div>
+    <div class="col-md-12">
+        <div class="list-group">
+            {% for app in applications %}
+                <div class="list-group-item mb-3 shadow-sm">
+                    <h5>{{ app.jobseeker.userprofile.display_name }} ({{ app.jobseeker.username }})</h5>
+                    <p class="mb-1 text-muted">Email: {{ app.jobseeker.email }}</p>
+                    <p class="mb-1">Skills: <strong>{{ app.jobseeker.userprofile.skills_set }}</strong></p>
+                    <p class="text-muted small">Applied on: {{ app.applied_at }}</p>
+                    {% if app.jobseeker.userprofile.resume %}
+                        <a href="{{ app.jobseeker.userprofile.resume.url }}" class="btn btn-sm btn-outline-success" target="_blank">Download Resume</a>
+                    {% else %}
+                        <span class="text-danger small">No resume uploaded</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="alert alert-info">No applicants have applied for this job yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-md-9 col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">Manage Profile</h4>
+                <span class="badge bg-primary text-uppercase">{{ profile.get_user_type_display }}</span>
+            </div>
+
+            <div class="card-body p-4">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <div class="d-flex align-items-center mb-4 p-3 bg-light rounded border">
+                        <div class="me-4 text-center">
+                            {% if profile.profile_picture %}
+                                <img src="{{ profile.profile_picture.url }}" alt="Avatar" class="rounded-circle shadow-sm" width="80" height="80" style="object-fit: cover;">
+                            {% else %}
+                                <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center shadow-sm mx-auto" style="width: 80px; height: 80px; font-size: 32px;">
+                                    {{ request.user.username|slice:":1"|upper }}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted d-block mt-1">Profile Photo</small>
+                        </div>
+                        <div class="flex-grow-1">
+                            <h5 class="mb-1">{{ profile.display_name|default:request.user.username }}</h5>
+                            <p class="text-muted mb-0 small">{{ request.user.email }}</p>
+                            <span class="badge bg-secondary mt-1">Username: {{ request.user.username }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Change Profile Picture</label>
+                        {{ form.profile_picture }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Display Name</label>
+                            {{ form.display_name }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Phone Number</label>
+                            {{ form.phone_number }}
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Location</label>
+                            {{ form.location }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Website / Portfolio</label>
+                            {{ form.website }}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Professional Bio</label>
+                        {{ form.bio }}
+                    </div>
+
+                    {% if profile.user_type == 'recruiter' %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Company Information</label>
+                            {{ form.company_info }}
+                        </div>
+
+                    {% else %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Skills Set</label>
+                            {{ form.skills_set }}
+                            <div class="form-text">Separate skills with commas (e.g., Python, SQL, Networking).</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Resume (PDF / DOCX)</label>
+                            {{ form.resume }}
+                            {% if profile.resume %}
+                                <div class="mt-2">
+                                    <small class="text-success">
+                                        Current Resume: <a href="{{ profile.resume.url }}" target="_blank" class="fw-bold text-decoration-none">View Uploaded Resume</a>
+                                    </small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success py-2 fw-bold">Save All Changes</button>
+                        <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

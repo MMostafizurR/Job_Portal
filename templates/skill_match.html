@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h2>Skill Matching Dashboard</h2>
+    </div>
+
+    {% if profile.user_type == 'jobseeker' %}
+        <div class="col-md-12">
+            <h4>Jobs Matching Your Skills ({{ profile.skills_set }})</h4>
+            <div class="list-group mt-3">
+                {% for job in matched_jobs %}
+                    <div class="list-group-item mb-3 shadow-sm">
+                        <h5>{{ job.title }} <span class="badge bg-success float-end">{{ job.category }}</span></h5>
+                        <p class="text-muted mb-1">Required Skills: <strong>{{ job.skills_set }}</strong></p>
+                        <p>{{ job.job_description }}</p>
+                        <a href="{% url 'apply_job' job.id %}" class="btn btn-sm btn-outline-primary">Apply Now</a>
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info">No direct skill matches. <a href="{% url 'profile_manage' %}">Profile Manager</a>!</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <div class="col-md-12">
+            <h4>Candidate Skill Matches.</h4>
+            <div class="list-group mt-3">
+                {% for match in matches %}
+                    <div class="list-group-item mb-3 shadow-sm">
+                        <h5>Job: {{ match.job.title }}</h5>
+                        <p class="text-muted mb-1">Job Required Skills: <strong>{{ match.job.skills_set }}</strong></p>
+                        <hr>
+                        <p class="mb-1"><strong>Matched Jobseeker:</strong> {{ match.seeker.display_name }}</p>
+                        <p class="text-muted mb-2">Jobseeker Skills: <strong>{{ match.seeker.skills_set }}</strong></p>
+                        {% if match.seeker.resume %}
+                            <a href="{{ match.seeker.resume.url }}" class="btn btn-sm btn-outline-success" target="_blank">Download Resume</a>
+                        {% else %}
+                            <span class="text-danger small">No resume uploaded</span>
+                        {% endif %}
+                    </div>
+                {% empty %}
+                    <div class="alert alert-info">No candidate skill matches.</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
