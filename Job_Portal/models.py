@@ -29,6 +29,7 @@ class Job(models.Model):
     recruiter = models.ForeignKey(User, on_delete=models.CASCADE, related_name='jobs')
     title = models.CharField(max_length=200)
     number_of_openings = models.PositiveIntegerField()
+    company_name = models.CharField(max_length=200, blank=True, null=True)
     category = models.CharField(max_length=100)
     job_description = models.TextField()
     skills_set = models.CharField(max_length=255, help_text="Required skills")

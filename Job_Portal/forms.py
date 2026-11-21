@@ -80,7 +80,7 @@ class UserProfileForm(forms.ModelForm):
 class JobPostForm(forms.ModelForm):
     class Meta:
         model = Job
-        fields = ['title', 'number_of_openings', 'category', 'job_description', 'skills_set']
+        fields = ['title', 'number_of_openings', 'company_name', 'category', 'job_description', 'skills_set']
         widgets = {
             'job_description': forms.Textarea(attrs={'rows': 4}),
         }

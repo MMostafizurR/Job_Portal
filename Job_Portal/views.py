@@ -16,8 +16,10 @@ def dashboard_view(request):
   if query:
     jobs = jobs.filter(
         Q(title__icontains=query)
+        | Q(company_name__icontains=query)
         | Q(category__icontains=query)
         | Q(skills_set__icontains=query)
+        | Q(job_description__icontains=query)
     )
 
   if hasattr(request.user, 'userprofile') and request.user.userprofile.user_type == 'recruiter':
@@ -25,8 +27,10 @@ def dashboard_view(request):
     if query:
       jobs = jobs.filter(
           Q(title__icontains=query)
+          | Q(company_name__icontains=query)
           | Q(category__icontains=query)
           | Q(skills_set__icontains=query)
+          | Q(job_description__icontains=query)
       )
 
   context = {
@@ -83,7 +87,12 @@ def dashboard_view(request):
         
         query = request.GET.get('q', '')
         if query:
-            jobs = Job.objects.filter(skills_set__icontains=query) | Job.objects.filter(title__icontains=query)
+            jobs = Job.objects.filter(
+                Q(skills_set__icontains=query) |
+                Q(title__icontains=query) |
+                Q(company_name__icontains=query) |
+                Q(job_description__icontains=query)
+            )
         else:
             jobs = Job.objects.all()
         context['jobs'] = jobs
