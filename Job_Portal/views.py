@@ -207,3 +207,20 @@ def job_applicants_view(request, job_id):
     job = get_object_or_404(Job, id=job_id, recruiter=request.user)
     applications = JobApplication.objects.filter(job=job)
     return render(request, 'job_applicants.html', {'job': job, 'applications': applications})
+
+@login_required
+def job_detail_view(request, pk):
+  job = get_object_or_404(Job, pk=pk)
+
+  already_applied = JobApplication.objects.filter(
+      job=job, jobseeker=request.user
+  ).exists()
+
+  is_owner = job.recruiter == request.user
+
+  context = {
+      'job': job,
+      'already_applied': already_applied,
+      'is_owner': is_owner,
+  }
+  return render(request, 'job_detail.html', context)

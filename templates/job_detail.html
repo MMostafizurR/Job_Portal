@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}{{ job.title }} - Job Portal{% endblock %}
+{% block content %}
+<div class="row justify-content-center my-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 p-4 bg-white">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                    <h2 class="mb-1">{{ job.title }}</h2>
+                    {% if job.company_name %}
+                        <h5 class="text-muted mb-2">Company: <strong>{{ job.company_name }}</strong></h5>
+                    {% endif %}
+                    <p class="text-muted small mb-0">
+                        Category: <strong>{{ job.category }}</strong> | Posted: {{ job.created_at|date:"M d, Y" }}
+                    </p>
+                </div>
+                <span class="badge bg-success fs-6">Openings: {{ job.number_of_openings }}</span>
+            </div>
+
+            <hr>
+
+            <div class="mb-3">
+                <h6 class="fw-bold">Required Skills</h6>
+                <p class="mb-0">{{ job.skills_set }}</p>
+            </div>
+
+            <div class="mb-4">
+                <h6 class="fw-bold">Job Description</h6>
+                <p style="white-space: pre-line;">{{ job.job_description }}</p>
+            </div>
+
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">Back to Dashboard</a>
+
+                {% if is_owner %}
+                    <a href="{% url 'job_applicants' job.pk %}" class="btn btn-info text-white">View Applicants</a>
+                    <a href="{% url 'edit_job' job.pk %}" class="btn btn-warning">Edit Job</a>
+                    <a href="{% url 'delete_job' job.pk %}" class="btn btn-danger">Delete Job</a>
+                {% elif request.user.userprofile.user_type == 'jobseeker' %}
+                    {% if already_applied %}
+                        <button class="btn btn-secondary" disabled>Already Applied</button>
+                    {% else %}
+                        <!-- Update 'apply_job' to match your actual apply URL name -->
+                        <a href="{% url 'apply_job' job.pk %}" class="btn btn-primary">Apply Now</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

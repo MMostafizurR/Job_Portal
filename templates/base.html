@@ -13,8 +13,6 @@
             
             {% if request.user.is_authenticated %}
                 <form method="GET" action="{% url 'dashboard' %}" class="d-flex mx-auto" style="width: 40%;">
-                    <input type="text" name="q" class="form-control form-control-sm me-2" placeholder="Search jobs by title, category, skills..." value="{{ query }}">
-                    <button type="submit" class="btn btn-outline-light btn-sm">Search</button>
                 </form>
 
                 <ul class="navbar-nav ms-auto align-items-center">

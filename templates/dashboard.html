@@ -49,6 +49,7 @@
                             <span class="badge bg-success">Applied</span>
                         {% else %}
                             <a href="{% url 'apply_job' job.id %}" class="btn btn-sm btn-outline-success">Apply Now</a>
+                            <a href="{% url 'job_detail' job.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
                         {% endif %}
                     </div>
                 {% empty %}
